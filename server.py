@@ -35,7 +35,7 @@ def available_chairs(teatro):
     """ 
     Retorna lista de cadeiras disponíveis
     """
-    return [i for i in range(1, capacidade_teatro + 1) if i not in teatro]
+    return [i for i in range(0, capacidade_teatro) if i not in teatro]
 
 
 def handle_client(conn, addr, teatro, fila):
