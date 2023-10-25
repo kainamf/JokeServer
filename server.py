@@ -29,24 +29,24 @@ riddles = [
     ("O que é, o que é: é preto quando compra, vermelho quando usa e cinza quando joga fora?", "O carvão"),
     ("O que é, o que é: se joga na parede e não quebra?", "A sombra"),
     ("O que é, o que é: está no início da rua e no fim do horizonte?", "A letra 'U'"),
-
 ]
 
-# Função que retorna lista de cadeiras disponíveis
 def available_chairs(teatro):
+    """ 
+    Retorna lista de cadeiras disponíveis
+    """
     return [i for i in range(1, capacidade_teatro + 1) if i not in teatro]
 
 
-
-"""
-Função para lidar com a comunicação entre o servidor e um cliente conectado.
+def handle_client(conn, addr, teatro, fila):
+    """
+    Função para lidar com a comunicação entre o servidor e um cliente conectado.
     Args:
         conn (socket object): Objeto de conexão do cliente.
         addr (tuple): Tupla contendo o endereço IP e porta do cliente.
         teatro (list): Lista de cadeiras ocupadas no teatro.
         fila (Queue): Fila de espera para os clientes.
-"""
-def handle_client(conn, addr, teatro, fila):
+    """
     print(f'Conexão estabelecida com {addr}')
     conn.sendall("Bem-vindo ao Teatro de Piadas! Escolha uma cadeira de 1 a 10 ou digite 'sair' para encerrar.\n".encode('utf-8'))
 
