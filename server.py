@@ -8,68 +8,6 @@ porta = 2000
 capacidade_teatro = 10
 limite_fila = 5
 
-# Lista de piadas
-jokes = [
-    "Por que o programador atravessou a rua? Para chegar ao outro lado da API.",
-    "Qual é o objeto mais engraçado? O riso-cachorro.",
-    "O que um elevador falou para o outro? Eu acho que estou chegando a uma fase difícil.",
-    "O que aconteceu quando a geladeira foi para a terapia? Ela percebeu que estava guardando muita bagagem emocional.",
-    "Por que o esqueleto não brigou com ninguém? Ele não tinha estômago para isso.",
-    "Qual é o cúmulo da rapidez? Dar um beijo na boca e já estar pensando no casamento.",
-    "Por que o livro de matemática estava triste? Porque tinha muitos problemas.",
-    "O que uma impressora disse à outra? Essa folha é sua ou é uma impressão minha?",
-    "Por que o aluno de música sempre estava calmo? Porque ele sabia lidar bem com as notas.",
-    "Qual é o cúmulo da paciência? Ensinar libras para um surdo-mudo por telefone.",
-    "O que o zero disse para o oito? 'Uau, seu cinto está bem apertado!'",
-    "O que aconteceu com o carro quando ele chegou ao hospital? Ele foi engessado.",
-    "O que o celular disse para o carregador? 'Você me acende.'",
-    "Por que o lápis entrou na escola? Para melhorar a escrita.",
-    "Qual é o cúmulo da rapidez? Tomar um refrigerante de lata com canudo.",
-    "Por que o banheiro estava correndo? Porque estava com pressa para o número 2.",
-    "O que o pé esquerdo falou para o pé direito? Nada, eles não se encontram.",
-    "O que a galinha foi fazer na igreja? Assistir à missa do galo.",
-    "Por que a vassoura estava cansada? Porque ela estava sempre varrendo o assunto.",
-    "Qual é o cúmulo do cinema? Roubar o show.",
-    "Por que a vaca foi para o espaço? Para encontrar o vácuo.",
-    "O que a aranha disse para a mosca? Pode entrar, a casa é sua!",
-    "Por que o computador não está feliz? Porque ele perdeu o bit da alegria.",
-    "O que o advogado do frango foi fazer na delegacia? Foi soltar a franga.",
-    "Por que o tigre não gosta de ir à escola? Porque ele tem medo do boletim.",
-    "O que o queijo falou para o queijo ralado? 'Pare de me esfolar!'",
-    "Qual é o cúmulo da maldade? Colocar uma pessoa idosa no micro-ondas e fazer um vovô-tel.",
-    "O que o espermatozoide disse para o óvulo? Deixa eu morar com você porque a minha casa é um saco.",
-    "O que uma pilha falou para a outra? 'Você é meu único motivo para viver.'",
-    "Por que o livro de matemática estava triste? Porque tinha muitos problemas.",
-    "Qual é o cúmulo do esquecimento? Esquecer o próprio aniversário.",
-    "Por que a bicicleta foi para a terapia? Porque estava cansada de ser usada.",
-    "O que o peixe disse quando bateu numa parede? 'Droga!'",
-    "O que a água foi fazer no bar? Foi tomar um drinque.",
-    "Qual é o cúmulo do alcoolismo? Tomar um porre d'água.",
-    "Por que a planta não foi ao médico? Porque ela já estava bem enraizada.",
-    "O que o caracol disse quando foi atropelado? 'Vou chamar a polícia, você está na minha casa!'",
-    "Qual é o cúmulo da magreza? Comer uma azeitona e se afogar.",
-    "O que um semáforo disse para o outro? 'Não olhe, estou mudando de roupa.'",
-    "Por que a lua não usa Instagram? Porque ela quer ficar fora do foco.",
-    "Qual é o cúmulo da força? Quebrar um espelho com a própria imagem.",
-    "Por que o avião não pode ser amigo do helicóptero? Porque ele sempre decola a amizade.",
-    "O que a caneta disse para o lápis? 'Você é muito legal, mas você não tem a minha classe.'",
-    "Qual é o cúmulo da tristeza? Fazer palhaçada e ninguém rir.",
-    "Por que o elefante não pega fogo? Porque já é cinza.",
-    "O que o pão falou para o queijo? 'Vai na frente que eu estou seguindo.'",
-    "Por que o computador não sai de casa? Porque tem medo do mouse.",
-    "Qual é o cúmulo da preguiça? Mandar o cachorro latir por você.",
-    "O que uma impressora disse para a outra? 'Essa folha é sua ou é uma impressão minha?'",
-    "Por que a impressora não falou com ninguém? Porque ela não tem papel.",
-    "O que aconteceu com o livro de matemática? Ele tirou muitos zeros.",
-    "Por que o esqueleto não brigou com ninguém? Porque não tinha estômago para isso.",
-    "Qual é o cúmulo da rapidez? Dar um beijo na boca e já estar pensando no casamento.",
-    "O que um vaso disse para o outro? 'Você é muito bonito, mas vive cheio de frescura.'",
-    "Qual é o cúmulo da força? Quebrar o vento com um soco.",
-    "Por que o jogador de futebol foi ao banco? Trocar o seu Real.",
-    "O que aconteceu com o nariz vermelho? Ficou bêbado de sangue.",
-    "Por que o quadro ficou vermelho? Porque ele viu o boi passando no campo.",
-]
-
 # Lista de charadas
 riddles = [                         
     ("O que é, o que é: quanto mais se tira, maior ele fica?", "O buraco"),
@@ -121,6 +59,11 @@ def handle_client(conn, addr, teatro, fila):
 
         if msg.lower() == "sair":
             break
+        elif msg.lower() == "sim":
+            more_riddles = send_riddles(conn)
+            if not more_riddles:
+                conn.sendall("Obrigado por participar do Teatro de Piadas. Adeus!\n".encode('utf-8'))
+                break
         elif msg.isdigit():
             chair_number = int(msg)
             available_chairs_list = available_chairs(teatro)  # Obtem a lista de cadeiras disponíveis
@@ -133,8 +76,7 @@ def handle_client(conn, addr, teatro, fila):
                     conn.sendall(f"Você está na cadeira {chair_number}. Digite qualquer tecla para começar o show!\n".encode('utf-8'))
                     conn.recv(1024)  # Aguarda a confirmação do cliente
                     conn.sendall("O show está começando!\n".encode('utf-8'))
-                    send_jokes(conn)
-                    send_riddle(conn)
+                    send_riddles(conn)
                     if msg.lower() == "sair":
                         break
                     teatro.remove(chair_number)
@@ -155,21 +97,44 @@ def handle_client(conn, addr, teatro, fila):
     print(f'Conexão encerrada com {addr}')
     conn.close()
 
+# Lista de Charadas
+def send_riddles(conn):
+    while True:
+        random.shuffle(riddles)
+        selected_riddles = random.sample(riddles, 5)  # Seleciona aleatoriamente 5 charadas
+        for i, (riddle, answer) in enumerate(selected_riddles, start=1):
+            conn.sendall(f"Charada {i}: {riddle}\n".encode('utf-8'))
+            conn.recv(1024)  # Aguarda a confirmação do cliente
+            conn.sendall(f"Resposta {i}: {answer}\n".encode('utf-8'))
+
+            # Aguarda a resposta do usuário
+            user_response = conn.recv(1024).decode('utf-8').strip()
+
+            # Verifica se o usuário deseja sair
+            if user_response.lower() == "sair":
+                conn.sendall("Obrigado por participar do Teatro de Piadas. Adeus!\n".encode('utf-8'))
+                conn.close()  # Fecha a conexão
+                return False
+
+        # Após as 5 charadas, pergunta ao usuário se ele quer ouvir mais charadas ou sair.
+        conn.sendall("Deseja ouvir mais charadas? (Digite 'sim' para mais charadas ou 'sair' para encerrar)\n".encode('utf-8'))
+        user_choice = conn.recv(1024).decode('utf-8').strip()
+
+        if user_choice.lower() == "sair":
+            conn.close()  # Fecha a conexão
+            return False
+        elif user_choice.lower() != "sim":
+            conn.sendall("Opção inválida. Por favor, digite 'sim' para mais charadas ou 'sair' para encerrar.\n".encode('utf-8'))
+            
+        # Loop para esperar uma resposta válida
+            while True:
+                user_choice = conn.recv(1024).decode('utf-8').strip()
+                if user_choice.lower() == "sim" or user_choice.lower() == "sair":
+                    break
+                conn.sendall("Opção inválida. Por favor, digite 'sim' para mais charadas ou 'sair' para encerrar.\n".encode('utf-8'))
+    return True
 
 
-
-
-def send_jokes(conn):
-    random.shuffle(jokes)
-    for i in range(5):
-        conn.sendall(jokes[i].encode('utf-8') + b'\n')
-        conn.recv(1024)  # Aguarda a confirmação do cliente
-
-def send_riddle(conn):
-    riddle, answer = random.choice(riddles)
-    conn.sendall(f"Charada: {riddle}\n".encode('utf-8'))
-    conn.recv(1024)  # Aguarda a confirmação do cliente
-    conn.sendall(f"Resposta: {answer}\n".encode('utf-8'))
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
