@@ -136,7 +136,7 @@ def send_riddles(conn):
 
 
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server = socket.socket()    # padrão é criar socket TCP e IPv4
 
 # Binda o socket a uma porta
 server.bind((ip, porta))
