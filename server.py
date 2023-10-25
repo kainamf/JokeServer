@@ -152,9 +152,12 @@ server.listen()
 
 print(f"Servidor escutando em {ip}:{porta}")
 
-while True:
+try: 
     conn, addr = server.accept()
-
     # Cria uma nova thread para lidar com o cliente
     client_thread = threading.Thread(target=handle_client, args=(conn, addr, cadeiras_teatro, fila_espera))
     client_thread.start()
+except KeyboardInterrupt:
+    print("Encerrando servidor...")
+    server.close()
+    exit(0)
